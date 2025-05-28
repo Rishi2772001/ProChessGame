@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  web:
+    image: rishi2772001/prochessgame:v2-amd64        # final tag you want
+    build: .                                     # use current directory as build context
+    platform: linux/amd64                          # build the image for x86-64/Intel-AMD
+    ports:
+      - "80:8000"                                    # host 80 → container 8000
+    depends_on:
+      - redis
+    environment:
+      DJANGO_SETTINGS_MODULE: Chess_Game.settings
+      REDIS_HOST: redis                              # optional if hard-coding hosts below
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:

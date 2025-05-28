@@ -1,0 +1,19 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div>
+            <h2>Chess Pieces</h2>
+            <ul>
+                <li><i class="fa-duotone fa-solid fa-chess-pawn"></i> <b>Pawn:</b> Pawns move forward one step at a time and they can go two steps ahead on their first move. Pawns can eliminate the opponent piece if they are placed diagonally ahead on the immediate square.</li>
+                <li><i class="fa-duotone fa-solid fa-chess-rook"></i> <b>Rook:</b> Rooks can moves in straight lines horizontally or vertically and can eliminate the opponent piece whoever comes in the way. Rooks can also perform a special move called 'Castling'.</li>
+                <li><i class="fa-duotone fa-solid fa-chess-knight"></i> <b>Knight:</b> Knights move in an "L" shape: two squares in one direction and then one square perpendicular. They are the only pieces that can jump over other pieces, making them valuable for maneuvering around the board.</li>
+                <li><i class="fa-duotone fa-solid fa-chess-bishop"></i> <b>Bishop:</b> Bishops move diagonally across the board and can cover any number of squares. Since there are two bishops placed on white and black square respectively, the bishop on black square can move only black squares and same with the white ones.</li>
+                <li><i class="fa-duotone fa-solid fa-chess-queen"></i> <b>Queen:</b> The queen is the most powerful piece on the board, as she can move any number of squares in any direction making it as a key player for both offence and defence.</li>
+                <li><i class="fa-duotone fa-solid fa-chess-king"></i> <b>King:</b> The king can move one square in any direction. Although it moves slowly, protecting the king is the main objective, as the game ends when the king is checkmated. The king is also involved in castling, a special defensive strategy.</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+

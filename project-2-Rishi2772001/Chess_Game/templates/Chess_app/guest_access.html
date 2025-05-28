@@ -1,0 +1,11 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container">
+        <h2>Welcome to Our Chess Club</h2>
+        <p>Explore the rules and history of chess through our platform.</p><span>
+        <p>Ready to play? <a href="{% url 'user_login' %}" class="btn btn-primary">Log In</a> to start your game!</p>
+    </div>
+{% endblock %}

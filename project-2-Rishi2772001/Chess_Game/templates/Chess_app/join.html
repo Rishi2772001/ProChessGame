@@ -1,0 +1,15 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% block content %}
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Join Our Chess Club</h1>
+            <form method="POST" action="{% url 'join' %}"> 
+                {% csrf_token %}
+                {% bootstrap_form join_form %} 
+                <button type="submit" class="btn btn-primary">Join</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

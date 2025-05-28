@@ -1,0 +1,18 @@
+{% extends 'base_generic.html' %}
+{% load static %} 
+{% block content %}
+    <div class="container">
+        <h2>Confirm Delete</h2>
+        {% if entry.game.player1 == request.user %}
+            <p>Are you sure you want to delete the game against {{ entry.game.player2.username }} and any associated journal entries?</p>
+        {% else %}
+            <p>Are you sure you want to delete the game against {{ entry.game.player1.username }} and any associated journal entries?</p>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="{% url 'journal_entries' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+
+{% endblock %}

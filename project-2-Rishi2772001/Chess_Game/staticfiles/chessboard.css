@@ -1,0 +1,140 @@
+body {
+  padding-top: 40px;
+  font-family: "Poppins", sans-serif; 
+  background-color: #F9F6EE;
+}
+
+h1 {
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+.chessboard {
+  background-color: #D2B48C;
+    margin: auto;
+    border-collapse: separate;
+    border-spacing: 3px;  
+    border: 3px solid black; 
+}
+
+.chess-square {
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 30px;
+  border: 2px solid black;
+  cursor: pointer; 
+}
+
+.chessboard tr:nth-child(even) .chess-square:nth-child(odd),
+.chessboard tr:nth-child(odd) .chess-square:nth-child(even) {
+  background-color: #F5DEB3;
+}
+
+.chessboard tr:nth-child(even) .chess-square:nth-child(even),
+.chessboard tr:nth-child(odd) .chess-square:nth-child(odd) {
+  background-color: #D2691E;
+}
+
+.chessboard th {
+  background-color: #D2B48C;
+  font-size: 24px;
+  border: 3px solid black;
+  height: 60px;
+  text-align: center;
+}
+
+button {
+  width: 100px;
+  margin: 5px;
+  padding: 10px 20px;
+  background-color: #4169E1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1E90FF;
+}
+
+div {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+img {
+  margin-top: -40px;
+  margin-left: -50px;
+  width: 300px;
+  height: 300px;
+  display: block;
+  margin-right: 15px;
+  float: left;
+}
+.row-label{
+    background-color: #D2B48C; 
+    font-size: 24px;
+    height: 60px;
+    width: 60px;
+    text-align: center;
+}
+
+.corner{
+  background-color: #D2B48C; 
+    font-size: 24px;
+    height: 60px;
+    width: 60px;
+    text-align: center;
+}
+.corner-label{
+  background-color: #D2B48C; 
+    font-size: 24px;
+    height: 60px;
+    width: 60px; 
+    text-align: center;
+}
+
+.message-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: block;
+  width: auto;
+  padding: 10px;
+  background-color: #f8d7da; 
+  text-align: center;
+  color: black;
+  border-radius: 5px;
+  animation: slideDown 0.5s ease-out forwards;
+}
+
+.alert-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: block;
+  width: auto;
+  padding: 10px;
+  background-color: #f8d7da;
+  text-align: center;
+  color: black;
+  border-radius: 5px;
+  animation: slideDown 0.5s ease-out forwards;
+}
+
+@keyframes slideDown {
+  0% { opacity: 0; transform: translateY(-10px) translateX(-50%); }
+  100% { opacity: 1; transform: translateY(0) translateX(-50%); }
+}
+
+.form-inline .form-group, .form-inline form {
+  display: inline-block;
+  margin-right: 10px;
+}

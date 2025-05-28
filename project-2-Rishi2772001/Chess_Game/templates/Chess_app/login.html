@@ -1,0 +1,16 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block content %}
+    <div>
+        <h2>Login to Your Account</h2>
+        <form method="post" action="{% url 'user_login' %}">
+            {% csrf_token %}
+            {{ login_form.as_p }}
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <p>Don't have an account? <a href="{% url 'join' %}">Join</a> here.</p>
+        <p>Or <a href="{% url 'guest_access' %}">continue as guest</a> to explore.</p>
+    </div>
+</body>
+</html>
+{% endblock %}

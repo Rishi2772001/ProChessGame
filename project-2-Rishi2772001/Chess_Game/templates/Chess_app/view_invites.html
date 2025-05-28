@@ -1,0 +1,58 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Your Invites{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-5">Your Invites</h2>
+    <div class="mb-5">
+        <h3 class="mb-4">Received Invites</h3>
+        {% if received_invites %}
+            <div class="row">
+                {% for invite in received_invites %}
+                    <div class="col-md-6">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ invite.inviter.username }}</h5>
+                                <p class="card-text">has invited you to play a game.</p>
+                                <div class="d-flex justify-content-end">
+                                    <a href="{% url 'accept_invite' invite.id %}" class="btn btn-success me-2">Accept</a>
+                                    <a href="{% url 'decline_invite' invite.id %}" class="btn btn-outline-danger">Decline</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                You have no received invites at the moment.
+            </div>
+        {% endif %}
+    </div>
+    <div>
+        <h3 class="mb-4">Sent Invites</h3>
+        {% if sent_invites %}
+            <div class="row">
+                {% for invite in sent_invites %}
+                    <div class="col-md-6">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ invite.invitee.username }}</h5>
+                                <p class="card-text">
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    Waiting for a response.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                You have not sent any invites yet.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

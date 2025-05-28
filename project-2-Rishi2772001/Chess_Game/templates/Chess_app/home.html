@@ -1,0 +1,127 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center my-3">
+    <div class="header">
+        <h4>Chess Game - {{ game.player1.username }} vs {{ game.player2.username }}</h4>
+    </div>
+
+</div>
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="d-flex justify-content-between">
+        <table class="chessboard" border="1">
+            {% for row in rows %}
+            <tr>
+                <th class="row-label">{{ forloop.revcounter }}</th>
+                {% for pos, piece in row.items %}
+                <td class="chess-square" id="{{ pos }}">
+                    {{ piece|safe }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            <tr>
+                <th class="corner"></th>
+                {% for label in "abcdefgh" %}
+                <th class="column-label">{{ label }}</th>
+                {% endfor %}
+            </tr>
+        </table>
+        {% if messages %}
+        <div class="message-container">
+            {% for message in messages %}
+            <div class="{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="move-form mx-5">
+            <form id="move-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_move">Enter your move (e.g., e2e4):</label>
+                    <input type="text" name="move" id="id_move" maxlength="10" required>    
+                </div>
+                <div class="btn-group" role="group" aria-label="Chess Actions">
+                    <button type="submit" class="btn btn-primary">Move</button>
+                    <button type="button" class="btn btn-danger" id="resign-btn">Resign</button>
+                </div>
+            </form>
+            <p id="current-turn">Current Turn: {{ current_turn }}</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ------------------------------------------------------------------
+       1.  Build the correct ws://  *or*  wss:// URL automatically
+    ------------------------------------------------------------------ */
+    const wsScheme = window.wsScheme;
+    const gameId   = "{{ game.id }}";
+    const gameSocket = new WebSocket(
+        `${wsScheme}://${window.location.host}/ws/game/${gameId}/`
+    );
+
+    /* ------------------------------------------------------------------
+       2.  Open-state guard - register handlers only after connection
+    ------------------------------------------------------------------ */
+    gameSocket.addEventListener("open", () => {
+        console.log("Game socket connected ✅");
+
+        document.getElementById("move-form").addEventListener("submit", evt => {
+            evt.preventDefault();
+            const moveInput = document.getElementById("id_move");
+            /* Now safe to send: socket is OPEN */
+            gameSocket.send(JSON.stringify({
+                action: "move",
+                move:   moveInput.value.trim()
+            }));
+            moveInput.value = "";
+        });
+
+        document.getElementById("resign-btn").addEventListener("click", () => {
+            gameSocket.send(JSON.stringify({ action: "resign" }));
+        });
+    });
+
+    /* ------------------------------------------------------------------
+       3.  Incoming messages
+    ------------------------------------------------------------------ */
+    gameSocket.addEventListener("message", e => {
+        const data = JSON.parse(e.data);
+
+        if (data.type === "move") {
+            updateBoard(data.data);
+        } else if (data.type === "error") {
+            alert(data.message);
+        } else if (data.type === "resign") {
+            alert(data.data.message);
+            window.location.href = "{% url 'no_game' %}";
+        }
+    });
+
+    /* ------------------------------------------------------------------
+       4.  Helper to redraw board + turn label
+    ------------------------------------------------------------------ */
+    function updateBoard(gameState) {
+        for (const row of gameState.board) {
+            for (const square in row) {
+                document.getElementById(square).innerHTML = row[square];
+            }
+        }
+        document.getElementById("current-turn").innerText =
+            `Current Turn: ${gameState.current_turn}`;
+
+        if (gameState.status === "finished") {
+            alert(`Game Over. Winner: ${gameState.winner || "Draw"}`);
+            document.getElementById("move-form").style.display = "none";
+        }
+    }
+
+    /* ------------------------------------------------------------------
+       5.  Basic close/error logging
+    ------------------------------------------------------------------ */
+    gameSocket.addEventListener("close", () =>
+        console.error("Game socket closed unexpectedly ❌")
+    );
+</script>
+{% endblock %}
