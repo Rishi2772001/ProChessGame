@@ -1,21 +1,87 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/QVqxVwKC)
-[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=17015013)
-# 620-P3-Starter
-- Open CodeSpaces for this repo under Code, in the Codespaces tab. Click the green button to create and open the new Codespace.
-- This should open a new browser tab containing a VSCode window.  After a few minutes, you should see a command line prompt at the bottom, in the terminal window.
-- Because Project 3 is a continuation of Project 2, the easiest way to proceed would be to copy the final contents of your Project 2 repository into this one, including all of the project 2 Django files.  DO NOT RENAME YOUR ORIGINAL DJANGO PROJECT DIRECTORY NAME.  IT IS OKAY IF THE NAME OF YOUR DJANGO PROJECT REMAINS PROJECT2.
-- To copy your content from your origninal Project 2 repository, navigte to that repository within the GitHub web interface and then use the Code > Local > Download Zip feature.
-cd ..
-git add .
-git commit -m "Initial commit"
-git push
-```
-- It is very important that you do regular commits and pushes to avoid losing any work-in-progress.
-- 
-- Proceed with implementing the rest of the Project 3 features.
-- Note: Codespaces will timeout after a period of inactivity.  If this happens, you can restore your previous session by reopening your codespace within the github web interface, in the same place you created your codespace.
-- Tip:  If you need to prevent your Codespace session timing out, you can run this command to keep it alive:
+# ProChessGame
+
+A real‑time, multiplayer chess platform built with **Django 5**, **Django Channels 5**, **Redis**, and **WebSockets**.
+Players can register, challenge other online users, and play turn‑based chess that updates instantly across the board.
+
+---
+
+## Features
+
+* **Live Gameplay** – moves and resignations broadcast over WebSockets
+* **Online Presence** – sidebar shows only users who are currently logged‑in
+* **Invite System** – send / accept invites; auto‑spawns a new game
+* **Game History & Journal** – track results and add post‑game notes
+* **Autoscaling Docker Images** – multi‑arch (arm64 + amd64) images pushed to GCP Artifact Registry
+* **CI / CD** – GitHub Actions lint + tests → Docker Buildx → GCP deploy
+
+---
+
+## Quick Start (Local)
+
 ```bash
-while true; do echo "Preventing timeout..."; sleep 60; done
+# Clone & set‑up
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate && python manage.py createsuperuser
+redis-server &              # separate terminal
+python manage.py runserver 0.0.0.0:8000
 ```
 
+Open [http://127.0.0.1:8000/chess/join/](http://127.0.0.1:8000/chess/join/) in two browser windows and play!
+
+---
+
+## Docker
+
+```bash
+# build multi‑arch image (amd64 target)
+docker buildx build \
+  --platform linux/amd64 \
+  -t rishi2772001/prochessgame:v2-amd64 \
+  --push .
+# run with redis sidecar
+docker compose up -d
+```
+
+`docker-compose.yml` exposes **host 80 → container 8000**.
+
+---
+
+## Google Cloud Deployment (summary)
+
+1. **Artifact Registry**
+   `REGION-docker.pkg.dev/PROJECT/REPO/prochessgame:v2-amd64`
+2. **Instance Template** – “Deploy container” → image above; env `REDIS_HOST=redis`
+3. **Managed Instance Group** – min 2, max 4, health‑check **GET /chess/join/ 80**
+4. **Global HTTP(S) Load Balancer** – frontend port 80/443; backend MIG
+5. **Cloud DNS** – `A  game.prochessgame.com → LB_IP`
+
+Full step‑by‑step is in [`docs/gcp_deploy.md`](docs/gcp_deploy.md).
+
+---
+
+## Project Layout
+
+```
+Chess_Game/
+├─ Chess_app/         # Django app (models, views, consumers)
+│  └─ templates/
+├─ static/            # CSS + JS
+├─ docker‑compose.yml # dev stack (web + redis)
+├─ Dockerfile         # multi‑arch build
+└─ README.md          # you are here
+```
+
+---
+
+## Contributing
+
+Pull‑requests are welcome!
+Please run `ruff --fix` and `pytest` before opening a PR.
+
+---
+
+## License
+
+MIT © 2025 Rishi Ganji
